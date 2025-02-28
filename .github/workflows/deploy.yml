@@ -10,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
+      - name: Install Ansible and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible sshpass docker.io python3-pip
-          pip3 install docker docker-compose
+          sudo apt-get install -y ansible sshpass python3-pip
+          ansible-galaxy collection install community.docker
+          pip3 install docker
 
-      - name: Configure and Deploy using Ansible
+      - name: Run Ansible playbook
         run: |
-          ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser --extra-vars "ansible_ssh_pass=Password1234!" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+          ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser \
+            --extra-vars "ansible_ssh_pass=Password1234!" \
+            -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
