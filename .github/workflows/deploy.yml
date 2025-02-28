@@ -1,39 +1,24 @@
-name: Deploy Hello World App
+name: Deploy to Azure VM
 
 on:
   push:
     branches:
-      - main  # Trigger pipeline on changes to the main branch
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Use Ubuntu as the build agent
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Install Ansible and dependencies
-      - name: Install Ansible and dependencies
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible sshpass
+          sudo apt-get install -y ansible sshpass docker.io python3-pip
+          pip3 install docker docker-compose
 
-      # Step 3: Add the server's SSH key to known_hosts
-      - name: Add server to known_hosts
+      - name: Configure and Deploy using Ansible
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan 172.174.72.168 >> ~/.ssh/known_hosts
-
-      # Step 4: Configure Server and Deploy using Ansible
-      - name: Configure Server and Deploy
-        run: |
-          echo "Configuring server and deploying application using Ansible..."
           ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser --extra-vars "ansible_ssh_pass=Password1234!" -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
-
-      # Step 5: Build and Deploy Docker Container (Optional, if you want to build locally)
-      - name: Build and Deploy Docker Container
-        run: |
-          docker build -t hello-world-app .
-          docker run -d -p 80:80 hello-world-app
