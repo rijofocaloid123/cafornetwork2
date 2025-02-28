@@ -24,3 +24,9 @@ jobs:
         run: |
           echo "Configuring server and deploying application using Ansible..."
           ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser --extra-vars "ansible_ssh_pass=Password1234!"
+
+      - name: Build and Deploy Docker Container
+        run: |
+          docker build -t myapp .
+          docker run -d -p 80:80 myapp 
+ 
