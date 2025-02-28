@@ -1,52 +1,50 @@
 - hosts: all
   become: yes
-  vars:
-    ansible_python_interpreter: /usr/bin/python3  # Explicitly set Python interpreter
   tasks:
-    # Update apt cache
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    # Install Docker
     - name: Install Docker
       apt:
         name: docker.io
         state: present
 
-    # Start and enable Docker service
     - name: Start and enable Docker service
       service:
         name: docker
         state: started
         enabled: yes
 
-    # Add user to Docker group
     - name: Add user to Docker group
       user:
         name: azureuser
         groups: docker
         append: yes
 
-    # Copy the Dockerfile and application code to the VM
-    - name: Copy Dockerfile and application code
-      copy:
-        src: ./  # Copy files from the current directory (root of the repo)
-        dest: /home/azureuser/hello-world-app/
+    - name: Ensure application directory exists
+      file:
+        path: /home/azureuser/hello-world-app/
+        state: directory
 
-    # Build the Docker image
+    - name: Copy application files (Dockerfile and index.html) to server
+      copy:
+        src: ./  # This works since we run Ansible from the repo
+        dest: /home/azureuser/hello-world-app/
+        mode: '0644'
+
     - name: Build Docker image
-      docker_image:
+      community.docker.docker_image:
         name: hello-world-app
         build:
           path: /home/azureuser/hello-world-app/
         source: build
 
-    # Run the Docker container
     - name: Run Docker container
-      docker_container:
+      community.docker.docker_container:
         name: hello-world-app
         image: hello-world-app
         state: started
+        restart_policy: always
         ports:
-          - "80:80"  # Expose port 80 on the VM
+          - "80:80"
