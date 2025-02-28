@@ -27,6 +27,6 @@ jobs:
 
       - name: Build and Deploy Docker Container
         run: |
-          docker build -t myapp .
+          docker build -t myApp .
           docker run -d -p 80:80 myapp 
  
