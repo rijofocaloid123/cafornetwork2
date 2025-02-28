@@ -23,7 +23,7 @@
         "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu noble stable" | \
         tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-    - name: Install Docker engine
+    - name: Install Docker CE
       apt:
         name:
           - docker-ce
@@ -34,32 +34,31 @@
         update_cache: yes
         state: present
 
-    - name: Start and enable Docker service
-      service:
+    - name: Start Docker service
+      systemd:
         name: docker
         state: started
         enabled: yes
 
-    - name: Install Python Docker library
+    - name: Install Python Docker SDK (needed for community.docker modules)
       pip:
         name: docker
 
-    - name: Add user to Docker group
+    - name: Add azureuser to Docker group
       user:
         name: azureuser
         groups: docker
         append: yes
 
-    - name: Ensure application directory exists
+    - name: Create directory for app files
       file:
         path: /home/azureuser/hello-world-app/
         state: directory
 
-    - name: Copy application files (Dockerfile and index.html) to server
+    - name: Copy application files (Dockerfile + index.html) to server
       copy:
         src: ./
         dest: /home/azureuser/hello-world-app/
-        mode: '0644'
 
     - name: Build Docker image
       community.docker.docker_image:
