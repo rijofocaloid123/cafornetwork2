@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy to Azure VM
         run: |
-          ansible-playbook -i inventory.ini playbook.yml
+          ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser --extra-vars "ansible_ssh_pass=Password12
