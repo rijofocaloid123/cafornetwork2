@@ -23,5 +23,5 @@ jobs:
       - name: Deploy to Azure VM
         run: |
           ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser \
-            --extra-vars "ansible_ssh_pass=Password1234!" \
+            --extra-vars "ansible_ssh_pass=Password1234! ansible_python_interpreter=/usr/bin/python3" \
             -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
