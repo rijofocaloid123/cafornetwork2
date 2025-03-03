@@ -13,6 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+            # Step 3: Authenticate with Azure using Username and Password
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          username: azureuser # Your Azure username (e.g., user@example.com)
+          password: Password1234!  # Your Azure password
+
       - name: Install Ansible and dependencies
         run: |
           sudo apt-get update
