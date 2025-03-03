@@ -13,22 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-            # Step 3: Authenticate with Azure using Username and Password
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          username: azureuser # Your Azure username (e.g., user@example.com)
-          password: Password1234!  # Your Azure password
-
-      - name: Install Ansible and dependencies
+      - name: Install Ansible and Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y ansible sshpass python3-pip
           ansible-galaxy collection install community.docker
           pip3 install docker
 
-      - name: Run Ansible playbook
+      - name: Deploy to Azure VM
         run: |
-          ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser \
-            --extra-vars "ansible_ssh_pass=Password1234!" \
-            -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+          ansible-playbook -i inventory.ini playbook.yml
