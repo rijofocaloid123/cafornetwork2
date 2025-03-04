@@ -55,7 +55,7 @@
 
     - name: Copy application files (Dockerfile + index.html) to server
       copy:
-        src: ./app/   # Only copy app folder, not whole repo
+        src: ./  # Only copy app folder, not whole repo
         dest: /home/azureuser/hello-world-app/
 
     - name: Build Docker image
