@@ -97,3 +97,11 @@
         restart_policy: always
         ports:
           - "80:80"
+    - name: Check if Docker key was properly dearmored
+      stat:
+        path: /etc/apt/keyrings/docker.gpg
+      register: docker_key_stat
+
+    - name: Debug docker_key_stat
+      debug:
+        var: docker_key_stat
