@@ -25,5 +25,5 @@ jobs:
           VM_PASSWORD: Password1234!  # Add this to GitHub Secrets
         run: |
           ansible-playbook -i "20.110.164.165," playbook.yml -u "azureuser" \
-            --extra-vars "ansible_ssh_pass=Password1234!}" \
+            --extra-vars "ansible_ssh_pass=Password1234!" \
             -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
