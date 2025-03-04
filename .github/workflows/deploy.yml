@@ -26,4 +26,4 @@ jobs:
         run: |
           ansible-playbook -i "20.110.164.165," playbook.yml -u "azureuser" \
             --extra-vars "ansible_ssh_pass=Password1234!" \
-            -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
+            -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"' -vvv
