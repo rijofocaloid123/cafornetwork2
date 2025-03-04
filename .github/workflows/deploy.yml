@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy using Ansible
         env:
-          VM_IP: 172.174.72.168  # Replace with your Azure VM Public IP
+          VM_IP: 20.110.164.165  # Replace with your Azure VM Public IP
           VM_USER: azureuser
           VM_PASSWORD: ${{ secrets.VM_PASSWORD }}  # Add this to GitHub Secrets
         run: |
