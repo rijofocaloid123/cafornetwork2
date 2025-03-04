@@ -3,25 +3,27 @@ name: Deploy to Azure VM
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on push to main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Ansible and Dependencies
+      - name: Install Ansible and SSH dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible sshpass python3-pip
-          ansible-galaxy collection install community.docker
-          pip3 install docker
+          sudo apt-get install -y ansible sshpass
 
-      - name: Deploy to Azure VM
+      - name: Deploy using Ansible
+        env:
+          VM_IP: 172.174.72.168  # Replace with your Azure VM Public IP
+          VM_USER: azureuser
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}  # Add this to GitHub Secrets
         run: |
-          ansible-playbook -i 172.174.72.168, playbook.yml -u azureuser \
-            --extra-vars "ansible_ssh_pass=Password1234! ansible_python_interpreter=/usr/bin/python3" \
+          ansible-playbook -i "${VM_IP}," playbook.yml -u "${VM_USER}" \
+            --extra-vars "ansible_ssh_pass=${VM_PASSWORD}" \
             -e 'ansible_ssh_common_args="-o StrictHostKeyChecking=no"'
