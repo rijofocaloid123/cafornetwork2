@@ -89,4 +89,5 @@
         restart_policy: always
         ports:
           - "80:80"
+        recreate: true
       become: yes  # Same reason as above
