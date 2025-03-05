@@ -73,21 +73,35 @@
         owner: azureuser
         group: azureuser
 
-    - name: Build Docker image
-      community.docker.docker_image:
-        name: hello-world-app
-        build:
-          path: /home/azureuser/hello-world-app/
-        source: build
-      become: yes  # Required if Docker group membership not fully applied yet (new user group membership needs logout/login)
 
-    - name: Run Docker container
-      community.docker.docker_container:
-        name: hello-world-app
-        image: hello-world-app
-        state: started
-        restart_policy: always
-        ports:
-          - "80:80"
-        recreate: true
-      become: yes  # Same reason as above
+    - name: Remove old container if exists
+      command: docker rm -f hello-world-app
+      ignore_errors: yes
+      
+    - name: Build Docker image (force latest rebuild)
+      command: docker build -t hello-world-app:latest /home/azureuser/hello-world-app/
+      become: yes
+
+    - name: Run new Docker container
+      command: >
+        docker run -d --name hello-world-app -p 80:80
+        hello-world-app:latest
+      become: yes
+  #  - name: Build Docker image
+  #    community.docker.docker_image:
+  #      name: hello-world-app
+  #      build:
+  #        path: /home/azureuser/hello-world-app/
+  #      source: build
+  #    become: yes  # Required if Docker group membership not fully applied yet (new user group membership needs logout/login)
+
+ #   - name: Run Docker container
+ #     community.docker.docker_container:
+ #       name: hello-world-app
+ #       image: hello-world-app
+ #       state: started
+ #       restart_policy: always
+ #       ports:
+ #         - "80:80"
+ #       recreate: true
+ #     become: yes  # Same reason as above
